@@ -30,7 +30,7 @@
         }
 
         .btn {
-            position: absolute;
+            position: fixed;
             bottom: 20px;
             padding: 10px 20px;
             font-size: 20px;
@@ -68,20 +68,29 @@
 
     <script>
         function goBack() {
-            window.location.href = "create.html";
+            window.location.href = "create_flashcards.html";
         }
 
         function submitFolder() {
-            let name = document.getElementById("folderName").value;
+            let name = document.getElementById("folderName").value.trim();
 
             if (name === "") {
                 alert("Please enter a folder name");
                 return;
             }
 
+            // Get existing folders
+            let folders = JSON.parse(localStorage.getItem("folders")) || [];
+
+            // Add new folder
+            folders.push(name);
+
+            // Save to localStorage
+            localStorage.setItem("folders", JSON.stringify(folders));
+
             alert("Folder created: " + name);
 
-            window.location.href = "create.html";
+            window.location.href = "../create_flashcards.html";
         }
     </script>
 

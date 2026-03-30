@@ -52,11 +52,9 @@
       cursor: pointer;
     }
 
-   
-
-.submit-btn:hover {
-  background-color: #ddd;
-}
+    .submit-btn:hover {
+      background-color: #ddd;
+    }
 
   </style>
 </head>
@@ -65,7 +63,6 @@
   <div class="title">Choose Folder</div>
 
   <div class="box" id="folderBox">
-
     <div class="plus" onclick="addFolder()">+</div>
   </div>
 
@@ -74,66 +71,66 @@
   <script>
 
     function goBack() {
-      window.location.href = ".//main_menu.html";
+      window.location.href = "main_menu.html";
     }
 
     let folderCount = 0;
 
-   function addFolder() {
-  let folders = JSON.parse(localStorage.getItem("folders")) || [];
+    function addFolder() {
+      let folders = JSON.parse(localStorage.getItem("folders")) || [];
 
-  if (folders.length >= 10) {
-    alert("You can only have 10 folders!");
-    return;
-  }
+      if (folders.length >= 10) {
+        alert("You can only have 10 folders!");
+        return;
+      }
 
-  // Open Name Folder page
-  window.location.href = "name_folder.html";
-}
+      // Open Name Folder page
+      window.location.href = "name_folder.html";
+    }
 
-function loadFolders() {
-  let folders = JSON.parse(localStorage.getItem("folders")) || [];
-  let box = document.getElementById("folderBox");
+    function loadFolders() {
+      let folders = JSON.parse(localStorage.getItem("folders")) || [];
+      let box = document.getElementById("folderBox");
 
-  // Keep "+"
-  box.innerHTML = '<div class="plus" onclick="addFolder()">+</div>';
+      // Keep "+"
+      box.innerHTML = '<div class="plus" onclick="addFolder()">+</div>';
 
-  folders.forEach((name, index) => {
-    let container = document.createElement("div");
-    container.style.display = "flex";
-    container.style.alignItems = "center";
-    container.style.marginBottom = "10px";
+      folders.forEach((name, index) => {
+        let container = document.createElement("div");
+        container.style.display = "flex";
+        container.style.alignItems = "center";
+        container.style.marginBottom = "10px";
 
-    // Folder button
-    let btn = document.createElement("button");
-    btn.className = "folder";
-    btn.innerHTML = name;
-    btn.onclick = () => {
-      localStorage.setItem("currentFolder", name);
-      window.location.href = "create_flashcards/user_inputs.html"; 
-    };
+        // Folder button
+        let btn = document.createElement("button");
+        btn.className = "folder";
+        btn.innerHTML = name;
+        btn.onclick = () => {
+          localStorage.setItem("currentFolder", name);
+          window.location.href = "create_flashcards/user_inputs.html"; 
+        };
 
-    // Delete button
-    let del = document.createElement("button");
-    del.innerHTML = "🗑";
-    del.style.marginLeft = "10px";
-    del.style.cursor = "pointer";
-    del.onclick = (e) => {
-      e.stopPropagation(); // prevent opening folder
-      folders.splice(index, 1); // remove from array
-      localStorage.setItem("folders", JSON.stringify(folders));
+        // Delete button
+        let del = document.createElement("button");
+        del.innerHTML = "🗑";
+        del.style.marginLeft = "10px";
+        del.style.cursor = "pointer";
+        del.onclick = (e) => {
+          e.stopPropagation(); // prevent opening folder
+          folders.splice(index, 1); // remove from array
+          localStorage.setItem("folders", JSON.stringify(folders));
 
-      // Also remove folder notes
-      localStorage.removeItem(name);
+          // Also remove folder notes
+          localStorage.removeItem(name);
 
-      loadFolders(); // reload display
-    };
+          loadFolders(); // reload display
+        };
 
-    container.appendChild(btn);
-    container.appendChild(del);
-    box.appendChild(container);
-  });
-}
+        container.appendChild(btn);
+        container.appendChild(del);
+        box.appendChild(container);
+      });
+    }
 
     // Run when page loads
     window.onload = loadFolders;
