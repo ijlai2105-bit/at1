@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Inputs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            height: 100vh;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 32px;
+            margin-top: 40px;
+        }
+
+        .section {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 28px;
+        }
+
+        .input-area {
+            width: 80%;
+            height: 150px;
+            margin: 20px auto;
+            display: block;
+            background-color: #a1122a;
+            border: none;
+            font-size: 18px;
+            color: white;
+            padding: 10px;
+        }
+
+        .btn {
+            position: fixed;
+            bottom: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            border: 2px solid black;
+            background-color: white;
+            cursor: pointer;
+        }
+
+        .back-btn {
+            left: 20px;
+        }
+
+        .submit-btn {
+            right: 20px;
+        }
+
+        .btn:hover {
+            background-color: #ddd;
+        }
+
+        .flashcard-list {
+            width: 80%;
+            margin: 20px auto;
+            font-size: 16px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .flashcard-item {
+            background-color: #fff;
+            border: 1px solid black;
+            padding: 5px;
+            margin-bottom: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="title">Input Question</div>
+    <textarea class="input-area" id="question"></textarea>
+
+    <div class="section">Input Notes</div>
+    <textarea class="input-area" id="notes"></textarea>
+
+    <div class="flashcard-list" id="flashcardList"></div>
+
+    <button class="btn back-btn" onclick="goBack()">Back</button>
+    <button class="btn submit-btn" onclick="submitFlashcard()">Submit</button>
+
+    <script>
+        const folderName = localStorage.getItem("currentFolder");
+        if (!folderName) alert("No folder selected!");
+
+        let flashcards = [];
+        let editingIndex = null; // null if creating new, otherwise index of editing flashcard
+
+        function loadFlashcards() {
+            flashcards = JSON.parse(localStorage.getItem(folderName)) || [];
+            renderFlashcards();
+        }
+
+        function renderFlashcards() {
+            const list = document.getElementById("flashcardList");
+            list.innerHTML = "";
+
+            flashcards.forEach((fc, i) => {
+                const div = document.createElement("div");
+                div.className = "flashcard-item";
+                div.textContent = `Q: ${fc.question} | Notes: ${fc.notes}`;
+
+                // Click to edit
+                div.onclick = () => {
+                    document.getElementById("question").value = fc.question;
+                    document.getElementById("notes").value = fc.notes;
+                    editingIndex = i;
+                };
+
+                list.appendChild(div);
+            });
+        }
+
+        function submitFlashcard() {
+            const question = document.getElementById("question").value.trim();
+            const notes = document.getElementById("notes").value.trim();
+
+            if (!question && !notes) {
+                alert("Enter a question or notes before submitting!");
+                return;
+            }
+
+            if (editingIndex !== null) {
+                // Update existing flashcard
+                flashcards[editingIndex] = { question, notes };
+                editingIndex = null;
+            } else {
+                // Add new flashcard
+                flashcards.push({ question, notes });
+            }
+
+            localStorage.setItem(folderName, JSON.stringify(flashcards));
+
+            document.getElementById("question").value = "";
+            document.getElementById("notes").value = "";
+
+            renderFlashcards();
+        }
+
+        function goBack() {
+            const question = document.getElementById("question").value.trim();
+            const notes = document.getElementById("notes").value.trim();
+
+            if (question || notes) {
+                if (editingIndex !== null) {
+                    flashcards[editingIndex] = { question, notes };
+                    editingIndex = null;
+                } else {
+                    flashcards.push({ question, notes });
+                }
+            }
+
+            localStorage.setItem(folderName, JSON.stringify(flashcards));
+            window.location.href = "../create_flashcards.html"; // adjust path
+        }
+
+        window.onload = loadFlashcards;
+    </script>
+
+</body>
+</html>

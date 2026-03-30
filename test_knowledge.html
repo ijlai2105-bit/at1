@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Practice Flashcards</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        .title {
+            font-size: 32px;
+            margin-top: 60px;
+        }
+
+        .folder-btn {
+            margin: 20px;
+            padding: 15px 25px;
+            font-size: 18px;
+            cursor: pointer;
+            border: 2px solid black;
+            background-color: white;
+            display: inline-block;
+        }
+
+        .back-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            border: 2px solid black;
+            background-color: white;
+            cursor: pointer;
+        }
+
+        .flashcard {
+            margin-top: 50px;
+            font-size: 24px;
+            border: 2px solid black;
+            padding: 50px;
+            background-color: white;
+            width: 50%;
+            margin-left: auto;
+            margin-right: auto;
+            cursor: pointer;
+        }
+
+        .next-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            border: 2px solid black;
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="title">Select a Flashcard Set to Practice</div>
+
+    <div id="folderList"></div>
+
+    <div id="practiceArea" style="display:none;">
+        <div id="flashcard" class="flashcard"></div>
+        <button class="next-btn" onclick="nextCard()">Next</button>
+    </div>
+
+    <button class="back-btn" onclick="goBack()">Back</button>
+
+    <script>
+        let folders = JSON.parse(localStorage.getItem("folders")) || [];
+        let currentSet = [];
+        let currentIndex = 0;
+        let showingAnswer = false;
+
+        const folderListDiv = document.getElementById("folderList");
+        const practiceArea = document.getElementById("practiceArea");
+        const flashcardDiv = document.getElementById("flashcard");
+
+        // Show all folders as buttons
+        folders.forEach(folderName => {
+            const btn = document.createElement("div");
+            btn.className = "folder-btn";
+            btn.textContent = folderName;
+            btn.onclick = () => startPractice(folderName);
+            folderListDiv.appendChild(btn);
+        });
+
+        function startPractice(folderName) {
+            // Load flashcards for selected folder
+            const flashcards = JSON.parse(localStorage.getItem(folderName)) || [];
+            if (flashcards.length === 0) {
+                alert("This folder has no flashcards!");
+                return;
+            }
+            currentSet = flashcards;
+            currentIndex = 0;
+            showingAnswer = false;
+
+            folderListDiv.style.display = "none";
+            practiceArea.style.display = "block";
+            showCard();
+        }
+
+        function showCard() {
+            const card = currentSet[currentIndex];
+            flashcardDiv.textContent = showingAnswer ? card.notes : card.question;
+        }
+
+        flashcardDiv.onclick = () => {
+            showingAnswer = !showingAnswer;
+            showCard();
+        };
+
+        function nextCard() {
+            currentIndex++;
+            if (currentIndex >= currentSet.length) {
+                alert("End of flashcards!");
+                folderListDiv.style.display = "block";
+                practiceArea.style.display = "none";
+                return;
+            }
+            showingAnswer = false;
+            showCard();
+        }
+
+        function goBack() {
+            window.location.href = "main_menu.html";
+        }
+    </script>
+
+</body>
+</html>

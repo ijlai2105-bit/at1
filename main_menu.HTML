@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SnapStudy</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 900px;
+            border: 3px solid rgb(0, 0, 0);
+            padding: 40px;
+            text-align: center;
+            background-color: white;
+        }
+
+        .title {
+            border: 3px solid black;
+            padding: 20px;
+            font-size: 28px;
+            margin-bottom: 60px;
+            display: inline-block;
+            width: 50%;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .btn {
+            border: 3px solid black;
+            padding: 30px;
+            font-size: 20px;
+            width: 40%;
+            cursor: pointer;
+            background-color: white;
+            transition: 0.2s;
+        }
+
+        .btn:hover {
+            background-color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="title">SnapStudy</div>
+
+    <div class="row">
+        <button class="btn" onclick="createFlashcards()">Create Flashcards</button>
+        <button class="btn" onclick="testKnowledge()">Test Knowledge</button>
+    </div>
+
+</div>
+
+<script>
+    function createFlashcards() {
+        window.location.href = "create_flashcards.html";
+        // Redirects to create flashcards page
+    }
+
+    function testKnowledge() {
+        window.location.href = "test_knowledge.html";
+        // Redirects to test knowledge page
+    }
+</script>
+
+</body>
+</html>
